@@ -2,7 +2,6 @@
 
 
 #include "Creatures/MB_AstronautCharacter.h"
-//#include "ManualBreathing/Public/Creatures/MB_AstronautCharacter.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
