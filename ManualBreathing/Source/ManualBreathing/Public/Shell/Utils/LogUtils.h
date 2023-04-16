@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogPKCore, Display, All);
-DECLARE_LOG_CATEGORY_EXTERN(LogPKPirates, Display, All);
-DECLARE_LOG_CATEGORY_EXTERN(LogPKWorld, Display, All);
-DECLARE_LOG_CATEGORY_EXTERN(LogPKShell, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogMBCore, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogMBCreatures, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogMBWorld, Display, All);
+DECLARE_LOG_CATEGORY_EXTERN(LogMBShell, Display, All);
 
 /**
  * 

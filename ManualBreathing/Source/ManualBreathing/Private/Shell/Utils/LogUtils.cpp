@@ -3,10 +3,10 @@
 
 #include "Shell/Utils/LogUtils.h"
 
-DEFINE_LOG_CATEGORY(LogPKCore);
-DEFINE_LOG_CATEGORY(LogPKPirates);
-DEFINE_LOG_CATEGORY(LogPKWorld);
-DEFINE_LOG_CATEGORY(LogPKShell);
+DEFINE_LOG_CATEGORY(LogMBCore);
+DEFINE_LOG_CATEGORY(LogMBCreatures);
+DEFINE_LOG_CATEGORY(LogMBWorld);
+DEFINE_LOG_CATEGORY(LogMBShell);
 
 void FLogUtils::PrintScreen(const FString& InMessage, const FColor InColor, const float InTime, const int InKey)
 {
