@@ -1,0 +1,47 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "InputActionValue.h"
+#include "GameFramework/Character.h"
+#include "MB_AstronautCharacter.generated.h"
+
+class UInputAction;
+class UInputMappingContext;
+class UCameraComponent;
+
+UCLASS()
+class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
+{
+	GENERATED_BODY()
+	
+public:
+	AMB_AstronautCharacter();
+	
+	USkeletalMeshComponent* GetMesh1P() const { return FirstPersonMesh; }
+	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+
+	void PerformMove(const FInputActionValue& Value);
+	void PerformLook(const FInputActionValue& Value);
+
+private:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<UCameraComponent> CameraComponent;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
+	TObjectPtr<UInputMappingContext> DefaultMappingContext;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
+	TObjectPtr<UInputAction> JumpAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
+	TObjectPtr<UInputAction> MoveAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> LookAction;
+
+};
