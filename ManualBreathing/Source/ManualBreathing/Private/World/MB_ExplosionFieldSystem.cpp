@@ -2,7 +2,6 @@
 
 
 #include "World/MB_ExplosionFieldSystem.h"
-
 #include "Field/FieldSystemComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "ManualBreathing/Public/Shell/Utils/LogUtils.h"
@@ -36,10 +35,10 @@ void AMB_ExplosionFieldSystem::CreateExplosion() const
 	const FVector SphereLocation = SphereDetector->GetComponentLocation();
 	
 	//! NOTE: Magnitude is the GMC's damage threshold
-	//RadialFalloff->SetRadialFalloff(500000.0f, 0.f, 1.f, 0.f, SphereRadius, SphereLocation, EFieldFalloffType::Field_FallOff_None);
+	RadialFalloff->SetRadialFalloff(500000.0f, 0.f, 1.f, 0.f, SphereRadius, SphereLocation, EFieldFalloffType::Field_FallOff_None);
 
-	//GetFieldSystemComponent()->ApplyPhysicsField(true, EFieldPhysicsType::Field_ExternalClusterStrain, nullptr, RadialFalloff);
-	//GetFieldSystemComponent()->ApplyRadialForce(true, SphereLocation, ExplosionForceMagnitude);
+	GetFieldSystemComponent()->ApplyPhysicsField(true, EFieldPhysicsType::Field_ExternalClusterStrain, nullptr, RadialFalloff);
+	GetFieldSystemComponent()->ApplyLinearForce(true, GetActorUpVector(), ExplosionForceMagnitude);
 
 	RadialForce->FireImpulse();
 }
