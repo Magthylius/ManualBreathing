@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Shell/Utils/LogUtils.h"
 
 /* --- PUBLIC ---*/
 
@@ -41,6 +42,15 @@ void AMB_AstronautCharacter::BeginPlay()
 	}
 }
 
+void AMB_AstronautCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	//! If both are the same held down, hold breath
+	BreatheMode = bIsInhaling && bIsExhaling || !bIsInhaling && !bIsExhaling ? EMB_BreatheMode::Holding : bIsInhaling ? EMB_BreatheMode::Inhaling : EMB_BreatheMode::Exhaling;
+	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
+}
+
 
 void AMB_AstronautCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
@@ -51,6 +61,11 @@ void AMB_AstronautCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformLook);
+		
+		EnhancedInputComponent->BindAction(InhaleAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformInhale);
+		EnhancedInputComponent->BindAction(InhaleAction, ETriggerEvent::Completed, this, &AMB_AstronautCharacter::PerformInhale);
+		EnhancedInputComponent->BindAction(ExhaleAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformExhale);
+		EnhancedInputComponent->BindAction(ExhaleAction, ETriggerEvent::Completed, this, &AMB_AstronautCharacter::PerformExhale);
 	}
 }
 
@@ -75,4 +90,16 @@ void AMB_AstronautCharacter::PerformLook(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AMB_AstronautCharacter::PerformInhale(const FInputActionValue& Value)
+{
+	const bool bIsPressed = Value.Get<bool>();
+	bIsInhaling = bIsPressed;
+}
+
+void AMB_AstronautCharacter::PerformExhale(const FInputActionValue& Value)
+{
+	const bool bIsPressed = Value.Get<bool>();
+	bIsExhaling = bIsPressed;
 }

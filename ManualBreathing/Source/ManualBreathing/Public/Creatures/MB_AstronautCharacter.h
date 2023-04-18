@@ -11,6 +11,14 @@ class UInputAction;
 class UInputMappingContext;
 class UCameraComponent;
 
+UENUM()
+enum class EMB_BreatheMode
+{
+	Holding,
+	Inhaling,
+	Exhaling
+};
+
 UCLASS()
 class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 {
@@ -19,15 +27,19 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter();
 	
-	USkeletalMeshComponent* GetMesh1P() const { return FirstPersonMesh; }
+	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
 	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
 
 	void PerformMove(const FInputActionValue& Value);
 	void PerformLook(const FInputActionValue& Value);
+
+	void PerformInhale(const FInputActionValue& Value);
+	void PerformExhale(const FInputActionValue& Value);
 
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
@@ -43,5 +55,15 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> InhaleAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> ExhaleAction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	TEnumAsByte<EMB_BreatheMode> BreatheMode;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	bool bIsInhaling = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	bool bIsExhaling = false;
 };
