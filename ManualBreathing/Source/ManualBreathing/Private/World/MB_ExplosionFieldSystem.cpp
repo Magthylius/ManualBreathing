@@ -16,6 +16,9 @@ AMB_ExplosionFieldSystem::AMB_ExplosionFieldSystem()
 	SphereDetector->InitSphereRadius(200.f);
 
 	RadialFalloff = CreateDefaultSubobject<URadialFalloff>("RadialFalloffComponent");
+	
+	RadialForce = CreateDefaultSubobject<URadialForceComponent>("RadialForceComponent");
+	RadialForce->SetupAttachment(SphereDetector);
 }
 
 void AMB_ExplosionFieldSystem::CreateExplosion() const
@@ -29,8 +32,14 @@ void AMB_ExplosionFieldSystem::CreateExplosion() const
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ExplosionParticles, GetActorTransform());
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), ExplosionSoundBase, GetActorLocation());
 
+	const float SphereRadius = SphereDetector->GetScaledSphereRadius();
+	const FVector SphereLocation = SphereDetector->GetComponentLocation();
+	
 	//! NOTE: Magnitude is the GMC's damage threshold
-	RadialFalloff->SetRadialFalloff(500000.0f, 0.f, 1.f, 0.f, SphereDetector->GetScaledSphereRadius(), SphereDetector->GetComponentLocation(), EFieldFalloffType::Field_FallOff_None);
+	//RadialFalloff->SetRadialFalloff(500000.0f, 0.f, 1.f, 0.f, SphereRadius, SphereLocation, EFieldFalloffType::Field_FallOff_None);
 
-	GetFieldSystemComponent()->ApplyPhysicsField(true, EFieldPhysicsType::Field_ExternalClusterStrain, nullptr, RadialFalloff);
+	//GetFieldSystemComponent()->ApplyPhysicsField(true, EFieldPhysicsType::Field_ExternalClusterStrain, nullptr, RadialFalloff);
+	//GetFieldSystemComponent()->ApplyRadialForce(true, SphereLocation, ExplosionForceMagnitude);
+
+	RadialForce->FireImpulse();
 }

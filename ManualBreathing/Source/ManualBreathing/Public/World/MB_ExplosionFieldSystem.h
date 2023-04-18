@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "Field/FieldSystemActor.h"
 #include "Field/FieldSystemObjects.h"
+#include "PhysicsEngine/RadialForceComponent.h"
 #include "MB_ExplosionFieldSystem.generated.h"
 
 /**
@@ -27,9 +28,13 @@ private:
 	TObjectPtr<USphereComponent> SphereDetector;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
 	TObjectPtr<URadialFalloff> RadialFalloff;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<URadialForceComponent> RadialForce;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta= (AllowPrivateAccess))
 	TObjectPtr<UParticleSystem> ExplosionParticles;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta= (AllowPrivateAccess))
 	TObjectPtr<USoundBase> ExplosionSoundBase;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta= (AllowPrivateAccess))
+	float ExplosionForceMagnitude = 10.f;
 };
