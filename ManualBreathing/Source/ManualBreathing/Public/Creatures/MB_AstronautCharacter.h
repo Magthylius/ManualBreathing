@@ -64,6 +64,6 @@ private:
 	TEnumAsByte<EMB_BreatheMode> BreatheMode;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bIsInhaling = false;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bIsExhaling = false;
 };
