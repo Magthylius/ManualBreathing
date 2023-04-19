@@ -10,7 +10,7 @@
 
 /* --- PUBLIC ---*/
 
-AMB_AstronautCharacter::AMB_AstronautCharacter()
+AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 	
@@ -25,6 +25,19 @@ AMB_AstronautCharacter::AMB_AstronautCharacter()
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
+
+	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
+	CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
+}
+
+void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true */)
+{
+	OxygenAmount = 0.f;
+	
+	if (bResetDeathTimeLeft)
+	{
+		LowOxyDeathTimeLeft = LowOxyDeathGap;
+	}
 }
 
 /* --- PROTECTED ---*/
@@ -44,6 +57,8 @@ void AMB_AstronautCharacter::BeginPlay()
 	OxygenAmount = LungMaxAirCapacity;
 	HeartRate = DefaultHeartRate;
 	BreathingRate = DefaultBreathingRate;
+
+	LowOxyDeathTimeLeft = LowOxyDeathGap;
 }
 
 void AMB_AstronautCharacter::Tick(float DeltaTime)
@@ -61,10 +76,16 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
 		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? AirIntakeRate : 0.f; 
 	}
-
-	OxygenAmount -= IdleOxygenBurnRate * DeltaTime;
-	OxygenAmount = FMath::Clamp(OxygenAmount, 0.f, 100.f);
+	
+	OxygenAmount = FMath::Clamp(OxygenAmount - IdleOxygenBurnRate * DeltaTime, 0.f, 100.f);
 	BreathingRate = BreathTimeStamps.Num() / GetWorld()->TimeSeconds;
+
+	if (OxygenAmount <= 0.f)
+	{
+		LowOxyDeathTimeLeft = FMath::Clamp(LowOxyDeathTimeLeft - DeltaTime, 0.f, LowOxyDeathGap);
+		const float FocalDistance = FMath::Lerp(LowOxyFocalDistanceRange.X, LowOxyFocalDistanceRange.Y, LowOxyDeathTimeLeft / LowOxyDeathGap);
+		CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = FocalDistance;
+	}
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);

@@ -25,10 +25,9 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 	GENERATED_BODY()
 	
 public:
-	AMB_AstronautCharacter();
+	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 	
-	USkeletalMeshComponent* GetFirstPersonMesh() const { return FirstPersonMesh; }
-	UCameraComponent* GetFirstPersonCameraComponent() const { return CameraComponent; }
+	void ForceLowOxy(bool bResetDeathTimeLeft = true);
 
 protected:
 	virtual void BeginPlay() override;
@@ -69,13 +68,20 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float DefaultBreathingRate = 15.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	float FullBreathingTime = 3.f;
+	float FullBreathingTime = 2.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float IdleOxygenBurnRate = 5.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float MovingOxygenBurnRate = 15.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float JumpingOxygenBurnRate = 25.f;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
+	float LowOxyDeathGap = 30.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
+	float LowOxyDeathResetGap = 10.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
+	FVector2D LowOxyFocalDistanceRange = FVector2D(1.f, 50.f);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TEnumAsByte<EMB_BreatheMode> BreatheMode;
@@ -99,4 +105,7 @@ private:
 	float HeartRate = 60.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float BreathingRate = 15.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	float LowOxyDeathTimeLeft = 30.f;
 };
