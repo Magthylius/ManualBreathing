@@ -12,7 +12,7 @@ class UInputMappingContext;
 class UCameraComponent;
 
 UENUM()
-enum class EMB_BreatheMode
+enum class EMB_BreatheMode : uint8
 {
 	Holding,
 	Inhaling,
@@ -59,10 +59,13 @@ private:
 	TObjectPtr<UInputAction> InhaleAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> ExhaleAction;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float LungMaxAirCapacity = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float DefaultHeartRate = 60.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float FullBreathingTime = 3.f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TEnumAsByte<EMB_BreatheMode> BreatheMode;
@@ -70,6 +73,8 @@ private:
 	bool bIsInhaling = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bIsExhaling = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	float BreatheRate = 1.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float LungAirAmount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))

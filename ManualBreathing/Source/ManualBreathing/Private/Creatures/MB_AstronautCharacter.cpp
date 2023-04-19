@@ -40,6 +40,7 @@ void AMB_AstronautCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
+	
 }
 
 void AMB_AstronautCharacter::Tick(float DeltaTime)
@@ -48,7 +49,16 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 
 	//! If both are the same held down, hold breath
 	BreatheMode = bIsInhaling && bIsExhaling || !bIsInhaling && !bIsExhaling ? EMB_BreatheMode::Holding : bIsInhaling ? EMB_BreatheMode::Inhaling : EMB_BreatheMode::Exhaling;
+	
+	if (BreatheMode != EMB_BreatheMode::Holding)
+	{
+		BreatheRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
+		const float AirRate = BreatheMode == EMB_BreatheMode::Inhaling ? BreatheRate : -BreatheRate;
+		LungAirAmount = FMath::Clamp(LungAirAmount + AirRate, 0.f, LungMaxAirCapacity);
+	}
+	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
+	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
 }
 
 
