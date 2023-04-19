@@ -40,7 +40,8 @@ void AMB_AstronautCharacter::BeginPlay()
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
 	}
-	
+
+	OxygenAmount = 100.f;
 }
 
 void AMB_AstronautCharacter::Tick(float DeltaTime)
@@ -52,21 +53,26 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	
 	if (BreatheMode != EMB_BreatheMode::Holding)
 	{
+		const bool bCurrentlyInhaling = BreatheMode == EMB_BreatheMode::Inhaling;
+		
 		BreatheRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
-		const float AirRate = BreatheMode == EMB_BreatheMode::Inhaling ? BreatheRate : -BreatheRate;
-		LungAirAmount = FMath::Clamp(LungAirAmount + AirRate, 0.f, LungMaxAirCapacity);
+		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? BreatheRate : -BreatheRate), 0.f, LungMaxAirCapacity);
+		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? BreatheRate : 0.f; 
 	}
+
+	OxygenAmount -= IdleOxygenBurnRate * DeltaTime;
+	OxygenAmount = FMath::Clamp(OxygenAmount, 0.f, 100.f);
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
+	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
 }
 
-
-void AMB_AstronautCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AMB_AstronautCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformMove);
@@ -79,6 +85,11 @@ void AMB_AstronautCharacter::SetupPlayerInputComponent(class UInputComponent* Pl
 	}
 }
 
+void AMB_AstronautCharacter::Jump()
+{
+	Super::Jump();
+	OxygenAmount -= JumpingOxygenBurnRate * GetWorld()->DeltaTimeSeconds;
+}
 
 void AMB_AstronautCharacter::PerformMove(const FInputActionValue& Value)
 {
@@ -86,6 +97,7 @@ void AMB_AstronautCharacter::PerformMove(const FInputActionValue& Value)
 
 	if (Controller != nullptr)
 	{
+		OxygenAmount -= MovingOxygenBurnRate * GetWorld()->DeltaTimeSeconds;
 		AddMovementInput(GetActorForwardVector(), MovementVector.Y);
 		AddMovementInput(GetActorRightVector(), MovementVector.X);
 	}

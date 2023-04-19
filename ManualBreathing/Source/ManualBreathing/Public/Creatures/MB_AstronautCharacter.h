@@ -33,8 +33,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(UInputComponent* InputComponent) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 
+	virtual void Jump() override;
+	
 	void PerformMove(const FInputActionValue& Value);
 	void PerformLook(const FInputActionValue& Value);
 
@@ -66,6 +68,12 @@ private:
 	float DefaultHeartRate = 60.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float FullBreathingTime = 3.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float IdleOxygenBurnRate = 5.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float MovingOxygenBurnRate = 15.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float JumpingOxygenBurnRate = 25.f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TEnumAsByte<EMB_BreatheMode> BreatheMode;
@@ -76,7 +84,9 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float BreatheRate = 1.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
-	float LungAirAmount;
+	float LungAirAmount = 0.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	float OxygenAmount = 100.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float HeartRate;
 };
