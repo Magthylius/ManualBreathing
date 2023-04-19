@@ -16,5 +16,7 @@ class MANUALBREATHING_API UMB_CheatManager : public UCheatManager
 
 public:
 	UFUNCTION(Exec)
-	void LowOxy(bool bResetDeathTimeLeft = true) const;
+	void LowOxyReset(const bool bResetDeathTimeLeft = true) const;
+	UFUNCTION(Exec)
+	void LowOxy(const float DeathTimeLeft) const;
 };

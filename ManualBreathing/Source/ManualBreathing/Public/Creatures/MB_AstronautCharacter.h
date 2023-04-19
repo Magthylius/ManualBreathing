@@ -28,6 +28,7 @@ public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 	
 	void ForceLowOxy(bool bResetDeathTimeLeft = true);
+	void ForceLowOxy(float DeathTimeLeft);
 
 protected:
 	virtual void BeginPlay() override;

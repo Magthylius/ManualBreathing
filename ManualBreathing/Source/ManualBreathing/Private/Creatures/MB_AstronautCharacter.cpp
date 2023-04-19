@@ -41,6 +41,12 @@ void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true 
 	}
 }
 
+void AMB_AstronautCharacter::ForceLowOxy(float DeathTimeLeft)
+{
+	OxygenAmount = 0.f;
+	LowOxyDeathTimeLeft = DeathTimeLeft;
+}
+
 /* --- PROTECTED ---*/
 
 void AMB_AstronautCharacter::BeginPlay()
