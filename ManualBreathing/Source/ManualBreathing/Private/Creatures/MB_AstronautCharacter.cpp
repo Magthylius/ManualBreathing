@@ -21,6 +21,7 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 
 	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
 	CameraComponent->PostProcessSettings.bOverride_VignetteIntensity = true;
+	CameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = true;
 	CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
 	
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMeshComponent"));
@@ -94,9 +95,11 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		const float EffectAlpha = LowOxyDeathTimeLeft / LowOxyDeathGap;
 		const float FocalDistance = FMath::Lerp(LowOxyFocalDistanceRange.X, LowOxyFocalDistanceRange.Y, EffectAlpha);
 		const float VignetteIntensity = FMath::Lerp(LowOxyVignetteIntensityRange.Y, LowOxyVignetteIntensityRange.X, EffectAlpha);
+		const float SceneFringeIntensity = FMath::Lerp(LowOxySceneFringeIntensityRange.Y, LowOxySceneFringeIntensityRange.X, EffectAlpha);
 		
 		CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = FocalDistance;
 		CameraComponent->PostProcessSettings.VignetteIntensity = VignetteIntensity;
+		CameraComponent->PostProcessSettings.SceneFringeIntensity = SceneFringeIntensity;
 	}
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);

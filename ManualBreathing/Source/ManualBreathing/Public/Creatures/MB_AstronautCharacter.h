@@ -85,6 +85,8 @@ private:
 	FVector2D LowOxyFocalDistanceRange = FVector2D(1.f, 50.f);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	FVector2D LowOxyVignetteIntensityRange = FVector2D(0.4f, 1.f);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
+	FVector2D LowOxySceneFringeIntensityRange = FVector2D(0.f, 3.f);
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TEnumAsByte<EMB_BreatheMode> BreatheMode;
