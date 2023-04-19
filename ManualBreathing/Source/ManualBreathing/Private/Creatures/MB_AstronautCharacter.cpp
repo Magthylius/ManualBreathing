@@ -18,6 +18,10 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
 	CameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
 	CameraComponent->bUsePawnControlRotation = true;
+
+	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
+	CameraComponent->PostProcessSettings.bOverride_VignetteIntensity = true;
+	CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
 	
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMeshComponent"));
 	FirstPersonMesh->SetupAttachment(CameraComponent);
@@ -25,9 +29,6 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
-
-	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
-	CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
 }
 
 void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true */)
@@ -80,17 +81,23 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	OxygenAmount = FMath::Clamp(OxygenAmount - IdleOxygenBurnRate * DeltaTime, 0.f, 100.f);
 	BreathingRate = BreathTimeStamps.Num() / GetWorld()->TimeSeconds;
 
-	if (OxygenAmount <= 0.f)
+	const bool bLowOxygen = OxygenAmount <= 0.f;	
+	if (bLowOxygen)
 	{
 		LowOxyDeathTimeLeft = FMath::Clamp(LowOxyDeathTimeLeft - DeltaTime, 0.f, LowOxyDeathGap);
-		const float FocalDistance = FMath::Lerp(LowOxyFocalDistanceRange.X, LowOxyFocalDistanceRange.Y, LowOxyDeathTimeLeft / LowOxyDeathGap);
+		const float EffectAlpha = LowOxyDeathTimeLeft / LowOxyDeathGap;
+		const float FocalDistance = FMath::Lerp(LowOxyFocalDistanceRange.X, LowOxyFocalDistanceRange.Y, EffectAlpha);
+		const float VignetteIntensity = FMath::Lerp(LowOxyVignetteIntensityRange.Y, LowOxyVignetteIntensityRange.X, EffectAlpha);
+		
 		CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = FocalDistance;
+		CameraComponent->PostProcessSettings.VignetteIntensity = VignetteIntensity;
 	}
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
 	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate * 60) + FString(" per minute") , FColor::White, DeltaTime);
+	if (bLowOxygen) FLogUtils::PrintScreen(FString("Low oxygen! Time left: ") + FString::SanitizeFloat(LowOxyDeathTimeLeft), FColor::Red, DeltaTime);
 }
 
 void AMB_AstronautCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
