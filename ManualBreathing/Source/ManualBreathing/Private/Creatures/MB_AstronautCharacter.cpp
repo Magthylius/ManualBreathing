@@ -41,7 +41,9 @@ void AMB_AstronautCharacter::BeginPlay()
 		}
 	}
 
-	OxygenAmount = 100.f;
+	OxygenAmount = LungMaxAirCapacity;
+	HeartRate = DefaultHeartRate;
+	BreathingRate = DefaultBreathingRate;
 }
 
 void AMB_AstronautCharacter::Tick(float DeltaTime)
@@ -55,17 +57,19 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	{
 		const bool bCurrentlyInhaling = BreatheMode == EMB_BreatheMode::Inhaling;
 		
-		BreatheRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
-		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? BreatheRate : -BreatheRate), 0.f, LungMaxAirCapacity);
-		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? BreatheRate : 0.f; 
+		AirIntakeRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
+		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
+		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? AirIntakeRate : 0.f; 
 	}
 
 	OxygenAmount -= IdleOxygenBurnRate * DeltaTime;
 	OxygenAmount = FMath::Clamp(OxygenAmount, 0.f, 100.f);
+	BreathingRate = BreathTimeStamps.Num() / GetWorld()->TimeSeconds;
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
+	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate * 60) + FString(" per minute") , FColor::White, DeltaTime);
 }
 
 void AMB_AstronautCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -116,12 +120,35 @@ void AMB_AstronautCharacter::PerformLook(const FInputActionValue& Value)
 
 void AMB_AstronautCharacter::PerformInhale(const FInputActionValue& Value)
 {
-	const bool bIsPressed = Value.Get<bool>();
-	bIsInhaling = bIsPressed;
+	if (const bool bIsPressed = Value.Get<bool>(); bIsInhaling != bIsPressed)
+	{
+		bIsInhaling = bIsPressed;
+		bExpectingExhale = true;
+	}
 }
 
 void AMB_AstronautCharacter::PerformExhale(const FInputActionValue& Value)
 {
-	const bool bIsPressed = Value.Get<bool>();
-	bIsExhaling = bIsPressed;
+	if (const bool bIsPressed = Value.Get<bool>(); bIsExhaling != bIsPressed)
+	{
+		bIsExhaling = bIsPressed;
+		
+		if (bExpectingExhale)
+		{
+			bExpectingExhale = false;
+
+			const float CurrentTime = GetWorld()->GetTimeSeconds();
+			BreathTimeStamps.Add(CurrentTime);
+
+			/*for (auto ArrayIterator = BreathTimeStamps.CreateIterator(); ArrayIterator; ++ArrayIterator)
+			{
+				if (*ArrayIterator < CurrentTime - 60.f)
+				{
+					ArrayIterator.RemoveCurrent();
+					continue;
+				}
+				break;
+			}*/
+		}
+	}
 }
