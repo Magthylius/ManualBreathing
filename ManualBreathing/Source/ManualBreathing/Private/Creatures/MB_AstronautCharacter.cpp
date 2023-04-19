@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Shell/Utils/LogUtils.h"
 
 /* --- PUBLIC ---*/
@@ -42,7 +43,7 @@ void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true 
 	}
 }
 
-void AMB_AstronautCharacter::ForceLowOxy(float DeathTimeLeft)
+void AMB_AstronautCharacter::ForceLowOxy(const float DeathTimeLeft)
 {
 	OxygenAmount = 0.f;
 	LowOxyDeathTimeLeft = DeathTimeLeft;
@@ -62,6 +63,8 @@ void AMB_AstronautCharacter::BeginPlay()
 		}
 	}
 
+	DefaultWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	
 	OxygenAmount = LungMaxAirCapacity;
 	HeartRate = DefaultHeartRate;
 	BreathingRate = DefaultBreathingRate;
@@ -91,16 +94,34 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	const bool bLowOxygen = OxygenAmount <= 0.f;	
 	if (bLowOxygen)
 	{
+		bWasPreviouslyLowOxygen = true;
+		
 		LowOxyDeathTimeLeft = FMath::Clamp(LowOxyDeathTimeLeft - DeltaTime, 0.f, LowOxyDeathGap);
 		const float EffectAlpha = LowOxyDeathTimeLeft / LowOxyDeathGap;
 		const float FocalDistance = FMath::Lerp(LowOxyFocalDistanceRange.X, LowOxyFocalDistanceRange.Y, EffectAlpha);
 		const float VignetteIntensity = FMath::Lerp(LowOxyVignetteIntensityRange.Y, LowOxyVignetteIntensityRange.X, EffectAlpha);
 		const float SceneFringeIntensity = FMath::Lerp(LowOxySceneFringeIntensityRange.Y, LowOxySceneFringeIntensityRange.X, EffectAlpha);
-		
+
 		CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = FocalDistance;
 		CameraComponent->PostProcessSettings.VignetteIntensity = VignetteIntensity;
 		CameraComponent->PostProcessSettings.SceneFringeIntensity = SceneFringeIntensity;
+
+		const float CurrentSpeed = FMath::Lerp(LowOxyMinWalkSpeed, DefaultWalkSpeed, EffectAlpha);
+		GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
 	}
+	else
+	{
+		//! TODO: too instant
+		if (bWasPreviouslyLowOxygen)
+		{
+			bWasPreviouslyLowOxygen = false;
+			GetCharacterMovement()->MaxWalkSpeed = DefaultWalkSpeed;
+			CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
+			CameraComponent->PostProcessSettings.VignetteIntensity = LowOxyVignetteIntensityRange.X;
+			CameraComponent->PostProcessSettings.SceneFringeIntensity = LowOxySceneFringeIntensityRange.X;
+		}
+	}
+	
 	
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);

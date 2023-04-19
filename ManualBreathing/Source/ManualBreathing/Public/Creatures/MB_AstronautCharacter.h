@@ -27,8 +27,8 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 	
-	void ForceLowOxy(bool bResetDeathTimeLeft = true);
-	void ForceLowOxy(float DeathTimeLeft);
+	void ForceLowOxy(const bool bResetDeathTimeLeft = true);
+	void ForceLowOxy(const float DeathTimeLeft);
 
 protected:
 	virtual void BeginPlay() override;
@@ -82,6 +82,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	float LowOxyDeathResetGap = 10.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
+	float LowOxyMinWalkSpeed = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	FVector2D LowOxyFocalDistanceRange = FVector2D(1.f, 50.f);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	FVector2D LowOxyVignetteIntensityRange = FVector2D(0.4f, 1.f);
@@ -96,6 +98,10 @@ private:
 	bool bIsExhaling = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bExpectingExhale = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	float DefaultWalkSpeed = 600.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	bool bWasPreviouslyLowOxygen = false;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float AirIntakeRate = 0.f;
