@@ -14,7 +14,13 @@
 AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
-	
+
+	GetCharacterMovement()->SetWalkableFloorAngle(55.f);
+	GetCharacterMovement()->MaxWalkSpeed = 300.f;
+	GetCharacterMovement()->JumpZVelocity = 200.f;
+	GetCharacterMovement()->GravityScale = 0.165f;
+	GetCharacterMovement()->AirControl = 0.1f;
+
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
 	CameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
