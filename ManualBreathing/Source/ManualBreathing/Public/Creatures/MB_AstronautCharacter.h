@@ -23,12 +23,11 @@ UCLASS()
 class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+	friend class UMB_CheatManager;
 	
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
-	
-	void ForceLowOxy(const bool bResetDeathTimeLeft = true);
-	void ForceLowOxy(const float DeathTimeLeft);
 
 protected:
 	virtual void BeginPlay() override;
@@ -100,8 +99,6 @@ private:
 	bool bIsExhaling = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bExpectingExhale = false;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
-	float DefaultWalkSpeed = 600.f;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float AirIntakeRate = 0.f;
@@ -109,22 +106,31 @@ private:
 	float LungAirAmount = 0.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TArray<float> BreathTimeStamps;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
+	float DefaultWalkSpeed = 600.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float OxygenAmount = 100.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float HeartRate = 60.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float BreathingRate = 15.f;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Counters", meta = (AllowPrivateAccess))
 	float LowOxyDeathTimeLeft = 30.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Counters", meta = (AllowPrivateAccess))
 	float TargetEffectAlpha = 1.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Counters", meta = (AllowPrivateAccess))
 	float CurrentEffectAlpha = 1.f;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Counters", meta = (AllowPrivateAccess))
 	bool bWasPreviouslyLowOxygen = false;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Counters", meta = (AllowPrivateAccess))
 	float LowOxyRecoverTimeStamp = -1.f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cheats", meta = (AllowPrivateAccess))
+	bool bIsGodMode = false;
+
+	void ForceLowOxy(const bool bResetDeathTimeLeft = true);
+	void ForceLowOxy(const float DeathTimeLeft);
+	void EnableGodMode(const bool bEnable = true);
 };

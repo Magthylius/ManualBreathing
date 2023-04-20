@@ -19,3 +19,11 @@ void UMB_CheatManager::LowOxy(const float DeathTimeLeft) const
 		Astronaut->ForceLowOxy(DeathTimeLeft);
 	}
 }
+
+void UMB_CheatManager::GodMode(const bool bEnable /* true */) const
+{
+	if (AMB_AstronautCharacter* Astronaut = Cast<AMB_AstronautCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter()); IsValid(Astronaut))
+	{
+		Astronaut->EnableGodMode(bEnable);
+	}
+}

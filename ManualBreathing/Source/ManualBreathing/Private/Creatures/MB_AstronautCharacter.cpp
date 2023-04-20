@@ -33,22 +33,6 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	FirstPersonMesh->CastShadow = false;
 }
 
-void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true */)
-{
-	OxygenAmount = 0.f;
-	
-	if (bResetDeathTimeLeft)
-	{
-		LowOxyDeathTimeLeft = LowOxyDeathGap;
-	}
-}
-
-void AMB_AstronautCharacter::ForceLowOxy(const float DeathTimeLeft)
-{
-	OxygenAmount = 0.f;
-	LowOxyDeathTimeLeft = DeathTimeLeft;
-}
-
 /* --- PROTECTED ---*/
 
 void AMB_AstronautCharacter::BeginPlay()
@@ -89,6 +73,8 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
 		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? AirIntakeRate : 0.f; 
 	}
+
+	if (bIsGodMode) return;
 	
 	OxygenAmount = FMath::Clamp(OxygenAmount - IdleOxygenBurnRate * DeltaTime, 0.f, 100.f);
 	BreathingRate = BreathTimeStamps.Num() / WorldTimeSeconds;
@@ -195,16 +181,29 @@ void AMB_AstronautCharacter::PerformExhale(const FInputActionValue& Value)
 
 			const float CurrentTime = GetWorld()->GetTimeSeconds();
 			BreathTimeStamps.Add(CurrentTime);
-
-			/*for (auto ArrayIterator = BreathTimeStamps.CreateIterator(); ArrayIterator; ++ArrayIterator)
-			{
-				if (*ArrayIterator < CurrentTime - 60.f)
-				{
-					ArrayIterator.RemoveCurrent();
-					continue;
-				}
-				break;
-			}*/
 		}
 	}
+}
+
+/* --- PRIVATE ---*/
+
+void AMB_AstronautCharacter::ForceLowOxy(const bool bResetDeathTimeLeft /* true */)
+{
+	OxygenAmount = 0.f;
+	
+	if (bResetDeathTimeLeft)
+	{
+		LowOxyDeathTimeLeft = LowOxyDeathGap;
+	}
+}
+
+void AMB_AstronautCharacter::ForceLowOxy(const float DeathTimeLeft)
+{
+	OxygenAmount = 0.f;
+	LowOxyDeathTimeLeft = DeathTimeLeft;
+}
+
+void AMB_AstronautCharacter::EnableGodMode(const bool bEnable /* true */)
+{
+	bIsGodMode = bEnable;
 }

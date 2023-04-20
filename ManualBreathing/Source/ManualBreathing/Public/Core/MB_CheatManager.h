@@ -19,4 +19,6 @@ public:
 	void LowOxyReset(const bool bResetDeathTimeLeft = true) const;
 	UFUNCTION(Exec)
 	void LowOxy(const float DeathTimeLeft) const;
+	UFUNCTION(Exec)
+	void GodMode(const bool bEnable = true) const;
 };
