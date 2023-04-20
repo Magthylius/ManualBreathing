@@ -77,7 +77,7 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		
 		AirIntakeRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
 		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
-		if (LungAirAmount < LungMaxAirCapacity) OxygenAmount += bCurrentlyInhaling ? AirIntakeRate : 0.f; 
+		if (bCurrentlyInhaling && LungAirAmount < LungMaxAirCapacity) OxygenAmount += AirIntakeRate * IntakeToOxygenRatio; 
 	}
 
 	if (bIsGodMode) return;

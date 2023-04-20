@@ -72,9 +72,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float IdleOxygenBurnRate = 5.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	float MovingOxygenBurnRate = 15.f;
+	float MovingOxygenBurnRate = 7.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float JumpingOxygenBurnRate = 25.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float IntakeToOxygenRatio = 0.5f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	float LowOxyDeathGap = 30.f;
