@@ -15,6 +15,9 @@ class MANUALBREATHING_API AMB_MainGameState : public AGameStateBase
 {
 	GENERATED_BODY()
 
+public:
+	FORCEINLINE AMB_HabitatActor* GetTrueHabitat() const { return TrueHabitat; }
+	
 protected:
 	virtual void BeginPlay() override;
 
