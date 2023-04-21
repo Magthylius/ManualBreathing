@@ -129,7 +129,9 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 
 	const float CurrentSpeed = FMath::Lerp(LowOxyMinWalkSpeed, DefaultWalkSpeed, CurrentEffectAlpha);
 	GetCharacterMovement()->MaxWalkSpeed = CurrentSpeed;
-	
+
+	if (!bPrintStats) return;
+
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
@@ -230,4 +232,9 @@ void AMB_AstronautCharacter::ForceLowOxy(const float DeathTimeLeft)
 void AMB_AstronautCharacter::EnableGodMode(const bool bEnable /* true */)
 {
 	bIsGodMode = bEnable;
+}
+
+void AMB_AstronautCharacter::TogglePrintStats()
+{
+	bPrintStats = !bPrintStats;
 }

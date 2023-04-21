@@ -27,3 +27,11 @@ void UMB_CheatManager::GodMode(const bool bEnable /* true */) const
 		Astronaut->EnableGodMode(bEnable);
 	}
 }
+
+void UMB_CheatManager::PrintStats() const
+{
+	if (AMB_AstronautCharacter* Astronaut = Cast<AMB_AstronautCharacter>(GetWorld()->GetFirstPlayerController()->GetCharacter()); IsValid(Astronaut))
+	{
+		Astronaut->TogglePrintStats();
+	}
+}

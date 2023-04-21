@@ -149,8 +149,11 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cheats", meta = (AllowPrivateAccess))
 	bool bIsGodMode = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cheats", meta = (AllowPrivateAccess))
+	bool bPrintStats = false;
 
 	void ForceLowOxy(const bool bResetDeathTimeLeft = true);
 	void ForceLowOxy(const float DeathTimeLeft);
 	void EnableGodMode(const bool bEnable = true);
+	void TogglePrintStats();
 };

@@ -21,4 +21,6 @@ public:
 	void LowOxy(const float DeathTimeLeft) const;
 	UFUNCTION(Exec)
 	void GodMode(const bool bEnable = true) const;
+	UFUNCTION(Exec)
+	void PrintStats() const;
 };
