@@ -25,9 +25,6 @@ void UMB_HelmetWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime
 	BreathRateTextBlock->SetText(FText::FromString(BreathRateText));
 	LungCapacityTextBlock->SetText(FText::FromString(LungCapacityText));
 
-	UE_LOG(LogTemp, Warning, TEXT("UMB_HelmetWidget: BR: %s"), *BreathRateText);
-
-
 	const float OxygenAmount = AstronautCharacter->GetOxygenAmountNormalized();
 	FString OxygenLevel;
 	if (OxygenAmount > 0.8f) OxygenLevel = "HIGH";
