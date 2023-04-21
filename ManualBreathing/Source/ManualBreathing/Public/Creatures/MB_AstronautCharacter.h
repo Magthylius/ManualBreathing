@@ -29,6 +29,12 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE float GetBreathingRate() const { return BreathingRate; }
+	FORCEINLINE float GetHeartRate() const { return HeartRate; }
+	FORCEINLINE float GetLungAirAmountNormalized() const { return LungAirAmount / LungMaxAirCapacity; }
+	FORCEINLINE float GetOxygenAmountNormalized() const { return OxygenAmount / 100.f; }
+	FORCEINLINE float GetOxygenTankAmountNormalized() const { return OxygenTankAmount / DefaultOxygenTankAmount; }
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
