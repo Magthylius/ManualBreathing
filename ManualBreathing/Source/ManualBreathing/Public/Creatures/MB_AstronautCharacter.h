@@ -64,10 +64,6 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float LungMaxAirCapacity = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	float DefaultHeartRate = 60.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	float DefaultBreathingRate = 15.f;
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float FullBreathingTime = 2.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float IdleOxygenBurnRate = 5.f;
@@ -77,6 +73,14 @@ private:
 	float JumpingOxygenBurnRate = 25.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float IntakeToOxygenRatio = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	FVector2D HeartRateRange = FVector2D(60.f, 150.f);
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	TObjectPtr<UCurveFloat> HeartRateChangeCurve;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float HeartRateChangeMultiplier = 4.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	FVector2D BreathingRateRange = FVector2D(15.f, 60.f);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	float LowOxyDeathGap = 30.f;
@@ -115,6 +119,8 @@ private:
 	float OxygenAmount = 100.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float HeartRate = 60.f;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
+	float TargetHeartRate = 60.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float BreathingRate = 15.f;
 

@@ -7,6 +7,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Shell/Utils/LogUtils.h"
 
 /* --- PUBLIC ---*/
@@ -56,8 +57,9 @@ void AMB_AstronautCharacter::BeginPlay()
 	DefaultWalkSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	
 	OxygenAmount = LungMaxAirCapacity;
-	HeartRate = DefaultHeartRate;
-	BreathingRate = DefaultBreathingRate;
+	HeartRate = HeartRateRange.X;
+	TargetHeartRate = HeartRate;
+	BreathingRate = BreathingRateRange.X;
 
 	LowOxyDeathTimeLeft = LowOxyDeathGap;
 }
@@ -79,12 +81,22 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
 		if (bCurrentlyInhaling && LungAirAmount < LungMaxAirCapacity) OxygenAmount += AirIntakeRate * IntakeToOxygenRatio; 
 	}
-
+	
 	if (bIsGodMode) return;
 	
 	OxygenAmount = FMath::Clamp(OxygenAmount - IdleOxygenBurnRate * DeltaTime, 0.f, 100.f);
-	BreathingRate = BreathTimeStamps.Num() / WorldTimeSeconds;
 
+	//! Make BreathTimeStamps.Num() = BreathingRateRange.X
+	BreathingRate = BreathTimeStamps.Num() / WorldTimeSeconds * 60.f;
+
+	const float BreathingStep = UKismetMathLibrary::NormalizeToRange(BreathingRate, BreathingRateRange.X, BreathingRateRange.Y);
+	const float HeartRateChange = HeartRateChangeCurve->GetFloatValue(BreathingStep) * HeartRateChangeMultiplier + 1.f;
+	FLogUtils::PrintScreen(FString("BreathingStep") + FString::SanitizeFloat(BreathingStep), FColor::Cyan, DeltaTime);
+	FLogUtils::PrintScreen(FString("HeartRateChange") + FString::SanitizeFloat(HeartRateChange), FColor::Cyan, DeltaTime);
+
+	TargetHeartRate = FMath::Lerp(HeartRateRange.X, HeartRateRange.Y, BreathingStep);
+	HeartRate = FMath::Lerp(HeartRate, TargetHeartRate, HeartRateChange * DeltaTime);
+	
 	const bool bLowOxygen = OxygenAmount <= 0.f;
 	if (bLowOxygen)
 	{
@@ -116,7 +128,8 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	FLogUtils::PrintScreen(FString("Breathe Mode: ") + UEnum::GetValueAsString(BreatheMode), FColor::Cyan, DeltaTime);
 	FLogUtils::PrintScreen(FString("Lung Air Amount: ") + FString::SanitizeFloat(LungAirAmount), FColor::Red, DeltaTime);
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
-	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate * 60) + FString(" per minute") , FColor::White, DeltaTime);
+	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate) + FString(" per minute") , FColor::White, DeltaTime);
+	FLogUtils::PrintScreen(FString("Heart Rate: ") + FString::SanitizeFloat(HeartRate), FColor::White, DeltaTime);
 	if (bLowOxygen) FLogUtils::PrintScreen(FString("Low oxygen! Time left: ") + FString::SanitizeFloat(LowOxyDeathTimeLeft), FColor::Red, DeltaTime);
 }
 
