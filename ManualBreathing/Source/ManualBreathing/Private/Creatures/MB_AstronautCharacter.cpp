@@ -84,19 +84,17 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	
 	if (bIsGodMode) return;
 	
-	OxygenAmount = FMath::Clamp(OxygenAmount - IdleOxygenBurnRate * DeltaTime, 0.f, 100.f);
-
-	//! Make BreathTimeStamps.Num() = BreathingRateRange.X
-	BreathingRate = BreathTimeStamps.Num() / WorldTimeSeconds * 60.f;
-
-	const float BreathingStep = UKismetMathLibrary::NormalizeToRange(BreathingRate, BreathingRateRange.X, BreathingRateRange.Y);
-	const float HeartRateChange = HeartRateChangeCurve->GetFloatValue(BreathingStep) * HeartRateChangeMultiplier + 1.f;
-	FLogUtils::PrintScreen(FString("BreathingStep") + FString::SanitizeFloat(BreathingStep), FColor::Cyan, DeltaTime);
-	FLogUtils::PrintScreen(FString("HeartRateChange") + FString::SanitizeFloat(HeartRateChange), FColor::Cyan, DeltaTime);
-
-	TargetHeartRate = FMath::Lerp(HeartRateRange.X, HeartRateRange.Y, BreathingStep);
-	HeartRate = FMath::Lerp(HeartRate, TargetHeartRate, HeartRateChange * DeltaTime);
+	BreathingRate = BreathAmount / WorldTimeSeconds * 60.f;
 	
+	const float BreathingStep = UKismetMathLibrary::NormalizeToRange(BreathingRate, BreathingRateRange.X, BreathingRateRange.Y);
+	
+	TargetHeartRate = FMath::Lerp(HeartRateRange.X, HeartRateRange.Y, BreathingStep);
+	HeartRate = FMath::Lerp(HeartRate, TargetHeartRate, HeartRateChangeMultiplier * DeltaTime);
+	
+	const float HeartRateStep = UKismetMathLibrary::NormalizeToRange(HeartRate, HeartRateRange.X, HeartRateRange.Y);
+	const float IdleBurn = IdleOxygenBurnRate * FMath::Max(1.f, HeartMaxOxyBurnMultiplier * HeartRateStep);
+	OxygenAmount = FMath::Clamp(OxygenAmount - IdleBurn * DeltaTime, 0.f, 100.f);
+
 	const bool bLowOxygen = OxygenAmount <= 0.f;
 	if (bLowOxygen)
 	{
@@ -130,6 +128,7 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
 	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate) + FString(" per minute") , FColor::White, DeltaTime);
 	FLogUtils::PrintScreen(FString("Heart Rate: ") + FString::SanitizeFloat(HeartRate), FColor::White, DeltaTime);
+	//FLogUtils::PrintScreen(FString("HeartRateChange: ") + FString::SanitizeFloat(HeartRateChange), FColor::White, DeltaTime);
 	if (bLowOxygen) FLogUtils::PrintScreen(FString("Low oxygen! Time left: ") + FString::SanitizeFloat(LowOxyDeathTimeLeft), FColor::Red, DeltaTime);
 }
 
@@ -198,8 +197,7 @@ void AMB_AstronautCharacter::PerformExhale(const FInputActionValue& Value)
 		{
 			bExpectingExhale = false;
 
-			const float CurrentTime = GetWorld()->GetTimeSeconds();
-			BreathTimeStamps.Add(CurrentTime);
+			BreathAmount++;
 		}
 	}
 }

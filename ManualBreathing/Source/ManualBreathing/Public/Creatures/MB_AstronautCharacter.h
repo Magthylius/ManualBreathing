@@ -78,9 +78,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	TObjectPtr<UCurveFloat> HeartRateChangeCurve;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	float HeartRateChangeMultiplier = 4.f;
+	float HeartRateChangeMultiplier = 0.04f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
-	FVector2D BreathingRateRange = FVector2D(15.f, 60.f);
+	float HeartMaxOxyBurnMultiplier = 4.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	FVector2D BreathingRateRange = FVector2D(28.f, 75.f);
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay | Low Oxygen", meta = (AllowPrivateAccess))
 	float LowOxyDeathGap = 30.f;
@@ -111,7 +113,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float LungAirAmount = 0.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
-	TArray<float> BreathTimeStamps;
+	float BreathAmount;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float DefaultWalkSpeed = 600.f;
