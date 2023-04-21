@@ -60,6 +60,7 @@ void AMB_AstronautCharacter::BeginPlay()
 	HeartRate = HeartRateRange.X;
 	TargetHeartRate = HeartRate;
 	BreathingRate = BreathingRateRange.X;
+	OxygenTankAmount = DefaultOxygenTankAmount;
 
 	LowOxyDeathTimeLeft = LowOxyDeathGap;
 }
@@ -79,7 +80,13 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		
 		AirIntakeRate = LungMaxAirCapacity / FullBreathingTime * DeltaTime;
 		LungAirAmount = FMath::Clamp(LungAirAmount + (bCurrentlyInhaling ? AirIntakeRate : -AirIntakeRate), 0.f, LungMaxAirCapacity);
-		if (bCurrentlyInhaling && LungAirAmount < LungMaxAirCapacity) OxygenAmount += AirIntakeRate * IntakeToOxygenRatio; 
+		
+		if (bCurrentlyInhaling && LungAirAmount < LungMaxAirCapacity)
+		{
+			const float OxygenUptake = AirIntakeRate * IntakeToOxygenRatio; 
+			OxygenAmount += OxygenUptake;
+			OxygenTankAmount = FMath::Max(0.f, OxygenTankAmount - OxygenUptake);
+		}
 	}
 	
 	if (bIsGodMode) return;
@@ -128,7 +135,7 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 	FLogUtils::PrintScreen(FString("Oxygen Amount: ") + FString::SanitizeFloat(OxygenAmount), FColor::Yellow, DeltaTime);
 	FLogUtils::PrintScreen(FString("Breathing Rate: ") + FString::SanitizeFloat(BreathingRate) + FString(" per minute") , FColor::White, DeltaTime);
 	FLogUtils::PrintScreen(FString("Heart Rate: ") + FString::SanitizeFloat(HeartRate), FColor::White, DeltaTime);
-	//FLogUtils::PrintScreen(FString("HeartRateChange: ") + FString::SanitizeFloat(HeartRateChange), FColor::White, DeltaTime);
+	FLogUtils::PrintScreen(FString("Oxygen Tank: ") + FString::SanitizeFloat(OxygenTankAmount), FColor::Blue, DeltaTime);
 	if (bLowOxygen) FLogUtils::PrintScreen(FString("Low oxygen! Time left: ") + FString::SanitizeFloat(LowOxyDeathTimeLeft), FColor::Red, DeltaTime);
 }
 

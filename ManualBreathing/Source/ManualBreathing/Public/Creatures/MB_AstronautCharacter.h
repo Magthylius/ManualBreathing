@@ -74,6 +74,8 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	float IntakeToOxygenRatio = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
+	float DefaultOxygenTankAmount = 5000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	FVector2D HeartRateRange = FVector2D(60.f, 150.f);
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Gameplay", meta = (AllowPrivateAccess))
 	TObjectPtr<UCurveFloat> HeartRateChangeCurve;
@@ -114,11 +116,13 @@ private:
 	float LungAirAmount = 0.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float BreathAmount;
-
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	float OxygenTankAmount;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float DefaultWalkSpeed = 600.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
-	float OxygenAmount = 100.f;
+	float OxygenAmount = 5000.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
 	float HeartRate = 60.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data | Cache", meta = (AllowPrivateAccess))
