@@ -49,6 +49,7 @@ protected:
 	
 	void PerformMove(const FInputActionValue& Value);
 	void PerformLook(const FInputActionValue& Value);
+	void PerformInteraction(const FInputActionValue& Value);
 
 	void PerformInhale(const FInputActionValue& Value);
 	void PerformExhale(const FInputActionValue& Value);
@@ -69,6 +70,8 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> InteractAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> InhaleAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
