@@ -15,6 +15,9 @@ class MANUALBREATHING_API AMB_EarthActor : public AStaticMeshActor
 	GENERATED_BODY()
 public:
 	AMB_EarthActor(const FObjectInitializer& ObjectInitializer);
+
+	FORCEINLINE UStaticMeshComponent* GetAtmosphere() const { return AtmosphereComponent; }
+	FORCEINLINE UStaticMeshComponent* GetClouds() const { return CloudsComponent; }
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
