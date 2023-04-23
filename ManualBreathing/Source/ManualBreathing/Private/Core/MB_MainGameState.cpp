@@ -5,6 +5,8 @@
 
 #include "Core/MB_MainHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "World/MB_EarthActor.h"
+#include "World/MB_ExplosionFieldSystem.h"
 
 void AMB_MainGameState::BeginPlay()
 {
@@ -20,7 +22,7 @@ void AMB_MainGameState::BeginPlay()
 		PlayerController->SetShowMouseCursor(true);
 		
 		UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(true);
-		MainMenuWidget->StartGameEvent.AddLambda([PlayerController, MainHUD]()
+		MainMenuWidget->StartGameEvent.AddLambda([this, PlayerController, MainHUD]()
 		{
 			PlayerController->SetInputMode(FInputModeGameOnly());
 			PlayerController->SetShowMouseCursor(false);
@@ -28,6 +30,17 @@ void AMB_MainGameState::BeginPlay()
 			MainHUD->SetHelmetWidget(true);
 
 			//! Blow up the earth!
+			AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));
+			if (IsValid(EarthActor))
+			{
+				EarthActor->SetHidden(true);
+			}
+
+			const AMB_ExplosionFieldSystem* ExplosionField = Cast<AMB_ExplosionFieldSystem>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_ExplosionFieldSystem::StaticClass()));
+			if (IsValid(ExplosionField))
+			{
+				ExplosionField->CreateExplosion();
+			}
 		});
 	}
 }
