@@ -4,6 +4,7 @@
 #include "Creatures/Components/MB_InteractionComponent.h"
 
 #include "Kismet/KismetSystemLibrary.h"
+#include "Shell/Utils/LogUtils.h"
 #include "World/Interfaces/MB_InteractableInterface.h"
 
 UMB_InteractionComponent::UMB_InteractionComponent()
@@ -31,8 +32,16 @@ void UMB_InteractionComponent::Interact()
 				{ return InteractionOwner->GetSquaredDistanceTo(A) < InteractionOwner->GetSquaredDistanceTo(B); });
 		}
 
-		IMB_InteractableInterface* Interactable = Cast<IMB_InteractableInterface>(OverlapResults[0]);
-		Interactable->BeginInteraction();
+		for (AActor* OverlappedActor : OverlapResults)
+		{
+			IMB_InteractableInterface* Interactable = Cast<IMB_InteractableInterface>(OverlappedActor);
+			if (Interactable != nullptr)
+			{
+				Interactable->BeginInteraction();
+				break;
+			}
+		}
+
 	}
 }
 
