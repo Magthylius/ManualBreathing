@@ -23,5 +23,6 @@ void UMB_MainMenuWidget::OnCreditsButton()
 
 void UMB_MainMenuWidget::OnQuitButton()
 {
+	//! Request quit gracefully
 	FGenericPlatformMisc::RequestExit(false);
 }
