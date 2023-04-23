@@ -22,7 +22,7 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	GetCharacterMovement()->GravityScale = 0.165f;
 	GetCharacterMovement()->AirControl = 0.1f;
 
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	CameraComponent = CreateDefaultSubobject<UMB_CameraComponent>(TEXT("FirstPersonCamera"));
 	CameraComponent->SetupAttachment(GetCapsuleComponent());
 	CameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
 	CameraComponent->bUsePawnControlRotation = true;
@@ -69,6 +69,8 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bBreathingAllowed) return;
+	
 	const float WorldTimeSeconds = GetWorld()->TimeSeconds;
 	
 	//! If both are the same held down, hold breath

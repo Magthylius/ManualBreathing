@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "Components/MB_CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "MB_AstronautCharacter.generated.h"
 
@@ -29,11 +30,14 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE void SetAllowBreathing(const bool bIsAllowed) { bBreathingAllowed = bIsAllowed; }
 	FORCEINLINE float GetBreathingRate() const { return BreathingRate; }
 	FORCEINLINE float GetHeartRate() const { return HeartRate; }
 	FORCEINLINE float GetLungAirAmountNormalized() const { return LungAirAmount / LungMaxAirCapacity; }
 	FORCEINLINE float GetOxygenAmountNormalized() const { return OxygenAmount / 100.f; }
 	FORCEINLINE float GetOxygenTankAmountNormalized() const { return OxygenTankAmount / DefaultOxygenTankAmount; }
+
+	FORCEINLINE UMB_CameraComponent* GetCameraComponent() const { return CameraComponent; }
 	
 protected:
 	virtual void BeginPlay() override;
@@ -52,7 +56,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
 	TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
-	TObjectPtr<UCameraComponent> CameraComponent;
+	TObjectPtr<UMB_CameraComponent> CameraComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -109,6 +113,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	EMB_BreatheMode BreatheMode;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	bool bBreathingAllowed = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bIsInhaling = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
