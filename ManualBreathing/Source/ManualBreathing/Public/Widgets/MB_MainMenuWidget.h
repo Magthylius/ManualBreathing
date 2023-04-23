@@ -7,6 +7,8 @@
 #include "Components/Button.h"
 #include "MB_MainMenuWidget.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FStartGameEvent);
+
 /**
  * 
  */
@@ -16,17 +18,19 @@ class MANUALBREATHING_API UMB_MainMenuWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	FStartGameEvent StartGameEvent;
+
+protected:
+	virtual void NativeOnInitialized() override;
+
+private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UButton> StartButton;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UButton> CreditsButton;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UButton> QuitButton;
-
-protected:
-	virtual void NativeOnInitialized() override;
-
-private:
+	
 	UFUNCTION()
 	void OnStartButton();
 	UFUNCTION()

@@ -4,11 +4,30 @@
 #include "Core/MB_MainHUD.h"
 #include "Blueprint/UserWidget.h"
 
-void AMB_MainHUD::BeginPlay()
+UMB_HelmetWidget* AMB_MainHUD::SetHelmetWidget(const bool bShowWidget)
 {
-	Super::BeginPlay();
+	if (!IsValid(HelmetWidget))
+	{
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		HelmetWidget = Cast<UMB_HelmetWidget>(CreateWidget(PlayerController, HelmetWidgetClass, FName("Helmet Widget")));
+	}
+
+	if (bShowWidget) HelmetWidget->AddToViewport();
+	else HelmetWidget->RemoveFromParent();
 	
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
-	UUserWidget* HelmetHUDWidget = CreateWidget(PlayerController, HelmetHUD, FName("Helmet HUD"));
-	HelmetHUDWidget->AddToViewport();
+	return HelmetWidget;
+}
+
+UMB_MainMenuWidget* AMB_MainHUD::SetMainMenuWidget(const bool bShowWidget)
+{
+	if (!IsValid(MainMenuWidget))
+	{
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		MainMenuWidget = Cast<UMB_MainMenuWidget>(CreateWidget(PlayerController, MainMenuWidgetClass, FName("Main Menu Widget")));
+	}
+
+	if (bShowWidget) MainMenuWidget->AddToViewport();
+	else MainMenuWidget->RemoveFromParent();
+
+	return MainMenuWidget;
 }

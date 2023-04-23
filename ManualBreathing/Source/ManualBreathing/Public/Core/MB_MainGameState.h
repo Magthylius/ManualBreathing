@@ -29,4 +29,6 @@ private:
 	TArray<AActor*> PotentialHabitats;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	TObjectPtr<AMB_HabitatActor> TrueHabitat;
+
+	void SetupHabitat();
 };

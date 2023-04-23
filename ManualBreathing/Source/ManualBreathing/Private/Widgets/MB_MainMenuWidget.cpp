@@ -13,7 +13,7 @@ void UMB_MainMenuWidget::NativeOnInitialized()
 
 void UMB_MainMenuWidget::OnStartButton()
 {
-	//! Get game state and start game
+	StartGameEvent.Broadcast();
 }
 
 void UMB_MainMenuWidget::OnCreditsButton()
