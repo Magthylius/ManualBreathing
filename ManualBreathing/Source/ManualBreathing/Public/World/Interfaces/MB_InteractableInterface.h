@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "MB_InteractableInterface.generated.h"
 
+class UMB_InteractionComponent;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UMB_InteractableInterface : public UInterface
@@ -22,4 +24,7 @@ class MANUALBREATHING_API IMB_InteractableInterface
 
 public:
 	virtual void BeginInteraction() = 0;
+
+	virtual void OnEnterInteractionRange(UMB_InteractionComponent* InteractionComponent) { }
+	virtual void OnExitInteractionRange(UMB_InteractionComponent* InteractionComponent) { }
 };

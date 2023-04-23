@@ -16,5 +16,9 @@ class MANUALBREATHING_API AMB_HabitatTerminalActor : public AStaticMeshActor, pu
 	GENERATED_BODY()
 
 public:
+	AMB_HabitatTerminalActor();
+	
 	virtual void BeginInteraction() override;
+	virtual void OnEnterInteractionRange(UMB_InteractionComponent* InteractionComponent) override;
+	virtual void OnExitInteractionRange(UMB_InteractionComponent* InteractionComponent) override;
 };

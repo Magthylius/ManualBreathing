@@ -39,7 +39,12 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
 
+	InteractionDetectorComponent = CreateDefaultSubobject<USphereComponent>("InteractionDetectorComponent");
+	InteractionDetectorComponent->SetupAttachment(RootComponent);
+	InteractionDetectorComponent->InitSphereRadius(100.f);
+	
 	InteractionComponent = CreateDefaultSubobject<UMB_InteractionComponent>("InteractionComponent");
+	InteractionComponent->SetupInteractionDetector(InteractionDetectorComponent);
 }
 
 /* --- PROTECTED ---*/
