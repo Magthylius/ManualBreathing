@@ -29,6 +29,7 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 
+	FORCEINLINE void SetAllowBreathing(const bool bIsAllowed) { bBreathingAllowed = bIsAllowed; }
 	FORCEINLINE float GetBreathingRate() const { return BreathingRate; }
 	FORCEINLINE float GetHeartRate() const { return HeartRate; }
 	FORCEINLINE float GetLungAirAmountNormalized() const { return LungAirAmount / LungMaxAirCapacity; }
@@ -109,6 +110,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	EMB_BreatheMode BreatheMode;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
+	bool bBreathingAllowed = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	bool bIsInhaling = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))

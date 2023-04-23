@@ -69,6 +69,8 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (!bBreathingAllowed) return;
+	
 	const float WorldTimeSeconds = GetWorld()->TimeSeconds;
 	
 	//! If both are the same held down, hold breath

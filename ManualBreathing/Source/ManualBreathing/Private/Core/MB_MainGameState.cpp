@@ -29,6 +29,12 @@ void AMB_MainGameState::BeginPlay()
 			MainHUD->SetMainMenuWidget(false);
 			MainHUD->SetHelmetWidget(true);
 
+			AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
+			if (IsValid(AstronautCharacter))
+			{
+				AstronautCharacter->SetAllowBreathing(true);
+			}
+
 			//! Blow up the earth!
 			AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));
 			if (IsValid(EarthActor))
