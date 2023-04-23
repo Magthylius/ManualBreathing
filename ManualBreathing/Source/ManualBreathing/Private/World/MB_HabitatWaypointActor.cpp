@@ -2,7 +2,6 @@
 
 
 #include "World/MB_HabitatWaypointActor.h"
-
 #include "Core/MB_MainGameState.h"
 #include "Kismet/KismetMathLibrary.h"
 
@@ -28,7 +27,8 @@ void AMB_HabitatWaypointActor::Tick(float DeltaSeconds)
 		}
 	}
 
-	const FRotator HabitatDirection = UKismetMathLibrary::FindLookAtRotation(PointerStaticMesh->GetComponentLocation(), TrueHabitat->GetActorLocation());
+	FRotator HabitatDirection = UKismetMathLibrary::FindLookAtRotation(PointerStaticMesh->GetComponentLocation(), TrueHabitat->GetActorLocation());
+	HabitatDirection.Pitch = 0.f;
 	PointerStaticMesh->SetWorldRotation(HabitatDirection);
 }
 
