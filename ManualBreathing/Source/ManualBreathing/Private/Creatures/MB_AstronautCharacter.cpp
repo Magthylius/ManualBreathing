@@ -38,6 +38,8 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
+
+	InteractionComponent = CreateDefaultSubobject<UMB_InteractionComponent>("InteractionComponent");
 }
 
 /* --- PROTECTED ---*/

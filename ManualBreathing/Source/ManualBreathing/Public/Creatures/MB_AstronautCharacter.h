@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "Components/MB_CameraComponent.h"
+#include "Components/MB_InteractionComponent.h"
 #include "GameFramework/Character.h"
 #include "MB_AstronautCharacter.generated.h"
 
@@ -57,6 +58,8 @@ private:
 	TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
 	TObjectPtr<UMB_CameraComponent> CameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<UMB_InteractionComponent> InteractionComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
