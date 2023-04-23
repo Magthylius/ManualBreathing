@@ -15,25 +15,25 @@ void AMB_MainGameState::BeginPlay()
 	SetupHabitat();
 
 	APlayerController* PlayerController =  UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	
+	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
+	AstronautCharacter->GetCameraComponent()->SetFieldOfView(60.f);
+
 	if (AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>(); IsValid(MainHUD))
 	{
 		PlayerController->SetInputMode(FInputModeUIOnly());
 		PlayerController->SetShowMouseCursor(true);
 		
 		UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(true);
-		MainMenuWidget->StartGameEvent.AddLambda([this, PlayerController, MainHUD]()
+		MainMenuWidget->StartGameEvent.AddLambda([this, PlayerController, AstronautCharacter, MainHUD]()
 		{
 			PlayerController->SetInputMode(FInputModeGameOnly());
 			PlayerController->SetShowMouseCursor(false);
+			
+			AstronautCharacter->SetAllowBreathing(true);
+			AstronautCharacter->GetCameraComponent()->SetTargetFieldOfField(90.f);
+
 			MainHUD->SetMainMenuWidget(false);
 			MainHUD->SetHelmetWidget(true);
-
-			AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
-			if (IsValid(AstronautCharacter))
-			{
-				AstronautCharacter->SetAllowBreathing(true);
-			}
 
 			//! Blow up the earth!
 			AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));

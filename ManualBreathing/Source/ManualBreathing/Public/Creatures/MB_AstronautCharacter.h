@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
+#include "Components/MB_CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "MB_AstronautCharacter.generated.h"
 
@@ -35,6 +36,8 @@ public:
 	FORCEINLINE float GetLungAirAmountNormalized() const { return LungAirAmount / LungMaxAirCapacity; }
 	FORCEINLINE float GetOxygenAmountNormalized() const { return OxygenAmount / 100.f; }
 	FORCEINLINE float GetOxygenTankAmountNormalized() const { return OxygenTankAmount / DefaultOxygenTankAmount; }
+
+	FORCEINLINE UMB_CameraComponent* GetCameraComponent() const { return CameraComponent; }
 	
 protected:
 	virtual void BeginPlay() override;
@@ -53,7 +56,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
 	TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
-	TObjectPtr<UCameraComponent> CameraComponent;
+	TObjectPtr<UMB_CameraComponent> CameraComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
