@@ -10,6 +10,7 @@ void UMB_EndScreenWidget::SetOutcome(const FMB_EndScreenOutcome Outcome)
 	TimeTakenTextBlock->SetRenderOpacity(0.f);
 	OxygenBreathedTextBlock->SetRenderOpacity(0.f);
 	BreathsTakenTextBlock->SetRenderOpacity(0.f);
+	ButtonCanvasPanel->SetRenderOpacity(0.f);
 	
 	bShowTitle = false;
 	bShowTimeTaken = false;
@@ -25,12 +26,12 @@ void UMB_EndScreenWidget::SetOutcome(const FMB_EndScreenOutcome Outcome)
 	TimeTakenTextBlock->SetText(FText::FromString(TimeTakenText));
 	OxygenBreathedTextBlock->SetText(FText::FromString(OxygenBreathedText));
 	BreathsTakenTextBlock->SetText(FText::FromString(BreathsTakenText));
-
-	constexpr float StartTime = 1.f;
-	GetWorld()->GetTimerManager().SetTimer(ShowTitleHandle, this, &UMB_EndScreenWidget::StartShowTitle, StartTime, false, 0.f);
-	GetWorld()->GetTimerManager().SetTimer(ShowTimeHandle, this, &UMB_EndScreenWidget::StartShowTimeTaken, StartTime, false, 1.f);
-	GetWorld()->GetTimerManager().SetTimer(ShowOxygenBreathedHandle, this, &UMB_EndScreenWidget::StartShowOxygenBreathed, StartTime, false, 1.5f);
-	GetWorld()->GetTimerManager().SetTimer(ShowBreathsTakenHandle, this, &UMB_EndScreenWidget::StartShowBreathsTaken, StartTime, false, 2.f);
+	
+	GetWorld()->GetTimerManager().SetTimer(ShowTitleHandle, this, &UMB_EndScreenWidget::StartShowTitle, ShowDelay, false, 0.f);
+	GetWorld()->GetTimerManager().SetTimer(ShowTimeHandle, this, &UMB_EndScreenWidget::StartShowTimeTaken, ShowDelay, false, 1.f);
+	GetWorld()->GetTimerManager().SetTimer(ShowOxygenBreathedHandle, this, &UMB_EndScreenWidget::StartShowOxygenBreathed, ShowDelay, false, 1.5f);
+	GetWorld()->GetTimerManager().SetTimer(ShowBreathsTakenHandle, this, &UMB_EndScreenWidget::StartShowBreathsTaken, ShowDelay, false, 2.f);
+	GetWorld()->GetTimerManager().SetTimer(ShowButtonsHandle, this, &UMB_EndScreenWidget::StartShowButtons, ShowDelay, false, 3.f);
 }
 
 void UMB_EndScreenWidget::NativeOnInitialized()
@@ -65,6 +66,11 @@ void UMB_EndScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	if (bShowBreathsTaken)
 	{
 		BreathsTakenTextBlock->SetRenderOpacity(FMath::Lerp(BreathsTakenTextBlock->GetRenderOpacity(), 1.f, RenderOpacitySpeed));
+	}
+
+	if (bShowButtons)
+	{
+		ButtonCanvasPanel->SetRenderOpacity(FMath::Lerp(ButtonCanvasPanel->GetRenderOpacity(), 1.f, RenderOpacitySpeed));
 	}
 }
 
