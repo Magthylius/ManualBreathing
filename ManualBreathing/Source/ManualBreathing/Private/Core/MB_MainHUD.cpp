@@ -16,6 +16,8 @@ UMB_HelmetWidget* AMB_MainHUD::SetHelmetWidget(const bool bShowWidget)
 	else HelmetWidget->RemoveFromParent();
 	
 	return HelmetWidget;
+
+	return Cast<UMB_HelmetWidget>(SetWidgetActive(HelmetWidget, HelmetWidgetClass, bShowWidget));
 }
 
 UMB_MainMenuWidget* AMB_MainHUD::SetMainMenuWidget(const bool bShowWidget)
@@ -30,4 +32,35 @@ UMB_MainMenuWidget* AMB_MainHUD::SetMainMenuWidget(const bool bShowWidget)
 	else MainMenuWidget->RemoveFromParent();
 
 	return MainMenuWidget;
+	//return Cast<UMB_MainMenuWidget>(SetWidgetActive(HelmetWidget, HelmetWidgetClass, bShowWidget));
+}
+
+UMB_InteractionPromptWidget* AMB_MainHUD::SetInteractionPrompt(const bool bShowWidget)
+{
+	if (!IsValid(InteractionPromptWidget))
+	{
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		InteractionPromptWidget = Cast<UMB_InteractionPromptWidget>(CreateWidget(PlayerController, InteractionPromptWidgetClass, FName("Interaction Prompt Widget")));
+	}
+
+	if (bShowWidget) InteractionPromptWidget->AddToViewport();
+	else InteractionPromptWidget->RemoveFromParent();
+
+	return InteractionPromptWidget;
+	//return Cast<UMB_InteractionPromptWidget>(SetWidgetActive(InteractionPromptWidget, InteractionPromptWidgetClass, bShowWidget));
+}
+
+//! TODO: fix this
+UUserWidget* AMB_MainHUD::SetWidgetActive(UUserWidget* WidgetInstance, TSubclassOf<UUserWidget> WidgetClass, const bool bShowWidget) const
+{
+	if (!IsValid(WidgetInstance))
+	{
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		WidgetInstance = CreateWidget(PlayerController, WidgetClass, FName(WidgetClass->GetName()));
+	}
+
+	if (bShowWidget) WidgetInstance->AddToViewport();
+	else WidgetInstance->RemoveFromParent();
+
+	return WidgetInstance;
 }
