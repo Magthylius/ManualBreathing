@@ -6,7 +6,6 @@
 #include "Core/MB_MainGameState.h"
 #include "Core/MB_MainHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Shell/Utils/LogUtils.h"
 
 AMB_HabitatTerminalActor::AMB_HabitatTerminalActor()
 {
@@ -21,13 +20,23 @@ void AMB_HabitatTerminalActor::BeginInteraction()
 
 void AMB_HabitatTerminalActor::OnEnterInteractionRange(UMB_InteractionComponent* InteractionComponent)
 {
-	AMB_MainHUD* MainHUD = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD<AMB_MainHUD>();
+	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	
+	if (!IsValid(PlayerController)) return;
+	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
+	
+	if (!IsValid(MainHUD)) return;
 	const UMB_InteractionPromptWidget* InteractionPrompt = MainHUD->SetInteractionPrompt(true);
 	InteractionPrompt->SetInteractionPhrase("interact");
 }
 
 void AMB_HabitatTerminalActor::OnExitInteractionRange(UMB_InteractionComponent* InteractionComponent)
 {
-	AMB_MainHUD* MainHUD = UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD<AMB_MainHUD>();
+	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	
+	if (!IsValid(PlayerController)) return;
+	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
+	
+	if (!IsValid(MainHUD)) return;
 	MainHUD->SetInteractionPrompt(false);
 }

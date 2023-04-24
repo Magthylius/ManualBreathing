@@ -97,10 +97,7 @@ void UMB_InteractionComponent::OnInteractionEndOverlap(UPrimitiveComponent* Over
 		InteractablesInRange.Remove(OtherActor);
 
 		IMB_InteractableInterface* Interactable = Cast<IMB_InteractableInterface>(OtherActor);
-		if (Interactable != nullptr)
-		{
-			Interactable->OnExitInteractionRange(this);
-		}
+		Interactable->OnExitInteractionRange(this);
 	}
 }
 
