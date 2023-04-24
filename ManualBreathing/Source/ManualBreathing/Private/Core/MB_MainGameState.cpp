@@ -36,7 +36,8 @@ void AMB_MainGameState::StartGameInternal()
 	
 	PlayerController->SetInputMode(FInputModeGameOnly());
 	PlayerController->SetShowMouseCursor(false);
-			
+
+	AstronautCharacter->SetPostProcessing(true);
 	AstronautCharacter->SetAllowBreathing(true);
 	AstronautCharacter->GetCameraComponent()->SetTargetFieldOfField(90.f);
 
