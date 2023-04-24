@@ -81,6 +81,18 @@ void AMB_MainGameState::EndGameInternal(const bool bPlayerWon)
 	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
 	UMB_EndScreenWidget* EndScreenWidget = MainHUD->SetEndScreenWidget(true);
 	EndScreenWidget->SetOutcome(Outcome);
+	EndScreenWidget->OnRestartGame.AddUObject(this, &AMB_MainGameState::RestartGame);
+	EndScreenWidget->OnQuitGame.AddUObject(this, &AMB_MainGameState::QuitGame);
+}
+
+void AMB_MainGameState::RestartGame()
+{
+	UGameplayStatics::OpenLevel(GetWorld(), FName(UGameplayStatics::GetCurrentLevelName(GetWorld())));
+}
+
+void AMB_MainGameState::QuitGame()
+{
+	FGenericPlatformMisc::RequestExit(false);
 }
 
 /* --- PRIVATE ---*/

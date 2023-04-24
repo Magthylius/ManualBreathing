@@ -25,6 +25,9 @@ public:
 	int BreathsTaken;
 };
 
+DECLARE_MULTICAST_DELEGATE(FRestartGameSignature);
+DECLARE_MULTICAST_DELEGATE(FQuitGameSignature);
+
 /**
  * 
  */
@@ -34,11 +37,20 @@ class MANUALBREATHING_API UMB_EndScreenWidget : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	FRestartGameSignature OnRestartGame;
+	FQuitGameSignature OnQuitGame;
+	
 	void SetOutcome(const FMB_EndScreenOutcome Outcome);
 
 protected:
+	virtual void NativeOnInitialized() override;
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
+	UFUNCTION()
+	void OnRestartButton();
+	UFUNCTION()
+	void OnQuitButton();
+	
 	UFUNCTION()
 	void StartShowTitle() { bShowTitle = true; }
 	UFUNCTION()

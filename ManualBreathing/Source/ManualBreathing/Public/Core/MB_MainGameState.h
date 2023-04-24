@@ -27,7 +27,11 @@ protected:
 	void StartGameInternal();
 	UFUNCTION(BlueprintCallable)
 	void EndGameInternal(const bool bPlayerWon);
-
+	UFUNCTION(BlueprintCallable)
+	void RestartGame();
+	UFUNCTION(BlueprintCallable)
+	void QuitGame();
+	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta = (AllowPrivateAccess))
 	TSubclassOf<AMB_HabitatActor> HabitatActorClass;

@@ -33,6 +33,14 @@ void UMB_EndScreenWidget::SetOutcome(const FMB_EndScreenOutcome Outcome)
 	GetWorld()->GetTimerManager().SetTimer(ShowBreathsTakenHandle, this, &UMB_EndScreenWidget::StartShowBreathsTaken, StartTime, false, 2.f);
 }
 
+void UMB_EndScreenWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+
+	RestartButton->OnClicked.AddUniqueDynamic(this, &UMB_EndScreenWidget::OnRestartButton);
+	QuitButton->OnClicked.AddUniqueDynamic(this, &UMB_EndScreenWidget::OnQuitButton);
+}
+
 void UMB_EndScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 {
 	Super::NativeTick(MyGeometry, InDeltaTime);
@@ -58,4 +66,14 @@ void UMB_EndScreenWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaT
 	{
 		BreathsTakenTextBlock->SetRenderOpacity(FMath::Lerp(BreathsTakenTextBlock->GetRenderOpacity(), 1.f, RenderOpacitySpeed));
 	}
+}
+
+void UMB_EndScreenWidget::OnRestartButton()
+{
+	OnRestartGame.Broadcast();
+}
+
+void UMB_EndScreenWidget::OnQuitButton()
+{
+	OnQuitGame.Broadcast();
 }
