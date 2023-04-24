@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Core/MB_MainGameState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Shell/Utils/LogUtils.h"
@@ -122,6 +123,12 @@ void AMB_AstronautCharacter::Tick(float DeltaTime)
 		
 		LowOxyDeathTimeLeft = FMath::Clamp(LowOxyDeathTimeLeft - DeltaTime, 0.f, LowOxyDeathGap);
 		TargetEffectAlpha = LowOxyDeathTimeLeft / LowOxyDeathGap;
+
+		if (LowOxyDeathTimeLeft <= 0.f)
+		{
+			AMB_MainGameState* MainGameState = GetWorld()->GetGameState<AMB_MainGameState>();
+			MainGameState->EndGame(false);
+		}
 	}
 	else if (LowOxyRecoverTimeStamp > 0.f && WorldTimeSeconds > LowOxyRecoverTimeStamp)
 	{
