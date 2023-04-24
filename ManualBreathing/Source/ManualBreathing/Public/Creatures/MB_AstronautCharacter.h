@@ -32,6 +32,8 @@ class MANUALBREATHING_API AMB_AstronautCharacter : public ACharacter
 public:
 	AMB_AstronautCharacter(const FObjectInitializer& ObjectInitializer);
 
+	void SetPostProcessing(const bool bActivate) const;
+	
 	FORCEINLINE void SetAllowBreathing(const bool bIsAllowed) { bBreathingAllowed = bIsAllowed; }
 	FORCEINLINE float GetBreathingRate() const { return BreathingRate; }
 	FORCEINLINE float GetHeartRate() const { return HeartRate; }

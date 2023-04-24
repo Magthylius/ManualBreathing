@@ -27,9 +27,6 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	CameraComponent->SetRelativeLocation(FVector(-10.f, 0.f, 60.f));
 	CameraComponent->bUsePawnControlRotation = true;
 
-	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = 1;
-	CameraComponent->PostProcessSettings.bOverride_VignetteIntensity = 1;
-	CameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = 1;
 	CameraComponent->PostProcessSettings.DepthOfFieldFocalDistance = LowOxyFocalDistanceRange.Y;
 	
 	FirstPersonMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMeshComponent"));
@@ -45,6 +42,13 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	
 	InteractionComponent = CreateDefaultSubobject<UMB_InteractionComponent>("InteractionComponent");
 	InteractionComponent->SetupInteractionDetector(InteractionDetectorComponent);
+}
+
+void AMB_AstronautCharacter::SetPostProcessing(const bool bActivate) const
+{
+	CameraComponent->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = bActivate;
+	CameraComponent->PostProcessSettings.bOverride_VignetteIntensity = bActivate;
+	CameraComponent->PostProcessSettings.bOverride_SceneFringeIntensity = bActivate;
 }
 
 /* --- PROTECTED ---*/
