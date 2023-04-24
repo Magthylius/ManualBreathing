@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Styling/SlateColor.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Components/TextBlock.h"
 #include "MB_EndScreenWidget.generated.h"
 
@@ -59,6 +60,8 @@ protected:
 	void StartShowOxygenBreathed() { bShowOxygenBreathed = true; }
 	UFUNCTION()
 	void StartShowBreathsTaken() { bShowBreathsTaken = true; }
+	UFUNCTION()
+	void StartShowButtons() { bShowButtons = true; }
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
@@ -69,6 +72,8 @@ private:
 	TObjectPtr<UTextBlock> OxygenBreathedTextBlock;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UTextBlock> BreathsTakenTextBlock;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
+	TObjectPtr<UCanvasPanel> ButtonCanvasPanel;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components", meta = (BindWidget, AllowPrivateAccess))
 	TObjectPtr<UButton> RestartButton;
@@ -77,6 +82,8 @@ private:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings", meta= (AllowPrivateAccess))
 	float OpacitySpeed = 2.f;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings", meta= (AllowPrivateAccess))
+	float ShowDelay = 2.f;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings", meta= (AllowPrivateAccess))
 	FString WinningText = "YOU SURVIVED!";
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Settings", meta= (AllowPrivateAccess))
@@ -94,6 +101,8 @@ private:
 	bool bShowOxygenBreathed = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
 	bool bShowBreathsTaken = false;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
+	bool bShowButtons = false;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
 	FTimerHandle ShowTitleHandle;
@@ -103,4 +112,6 @@ private:
 	FTimerHandle ShowOxygenBreathedHandle;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
 	FTimerHandle ShowBreathsTakenHandle;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Runtime Data", meta = (AllowPrivateAccess))
+	FTimerHandle ShowButtonsHandle;
 };
