@@ -4,7 +4,6 @@
 #include "Core/MB_MainGameState.h"
 #include "Core/MB_MainHUD.h"
 #include "Kismet/GameplayStatics.h"
-#include "Shell/Utils/LogUtils.h"
 #include "World/MB_EarthActor.h"
 #include "World/MB_ExplosionFieldSystem.h"
 #include "World/MB_TitleWidgetActor.h"
@@ -64,11 +63,24 @@ void AMB_MainGameState::StartGameInternal()
 	MainMenuWidget->StartGameEvent.RemoveAll(this);
 }
 
-void AMB_MainGameState::EndGameInternal()
+void AMB_MainGameState::EndGameInternal(const bool bPlayerWon)
 {
-	FLogUtils::PrintScreen("Game has ended! You win!");
-	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController->SetInputMode(FInputModeUIOnly());
+	PlayerController->SetShowMouseCursor(true);
+	
+	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
 	AstronautCharacter->SetAllowBreathing(false);
+
+	FMB_EndScreenOutcome Outcome;
+	Outcome.bPlayerHasWon = bPlayerWon;
+	Outcome.TimeTaken = GetWorld()->GetTimeSeconds();
+	Outcome.OxygenBreathed = AstronautCharacter->GetOxygenUsed();
+	Outcome.BreathsTaken = AstronautCharacter->GetBreathsTaken();
+
+	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
+	UMB_EndScreenWidget* EndScreenWidget = MainHUD->SetEndScreenWidget(true);
+	EndScreenWidget->SetOutcome(Outcome);
 }
 
 /* --- PRIVATE ---*/

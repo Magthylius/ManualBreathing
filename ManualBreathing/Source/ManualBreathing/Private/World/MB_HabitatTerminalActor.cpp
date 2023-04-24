@@ -15,7 +15,7 @@ AMB_HabitatTerminalActor::AMB_HabitatTerminalActor()
 void AMB_HabitatTerminalActor::BeginInteraction()
 {
 	AMB_MainGameState* GameState = GetWorld()->GetGameState<AMB_MainGameState>();
-	GameState->EndGame();
+	GameState->EndGame(true);
 }
 
 void AMB_HabitatTerminalActor::OnEnterInteractionRange(UMB_InteractionComponent* InteractionComponent)
@@ -26,7 +26,7 @@ void AMB_HabitatTerminalActor::OnEnterInteractionRange(UMB_InteractionComponent*
 	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
 	
 	if (!IsValid(MainHUD)) return;
-	const UMB_InteractionPromptWidget* InteractionPrompt = MainHUD->SetInteractionPrompt(true);
+	const UMB_InteractionPromptWidget* InteractionPrompt = MainHUD->SetInteractionPromptWidget(true);
 	InteractionPrompt->SetInteractionPhrase("interact");
 }
 
@@ -38,5 +38,5 @@ void AMB_HabitatTerminalActor::OnExitInteractionRange(UMB_InteractionComponent* 
 	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
 	
 	if (!IsValid(MainHUD)) return;
-	MainHUD->SetInteractionPrompt(false);
+	MainHUD->SetInteractionPromptWidget(false);
 }

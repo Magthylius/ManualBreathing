@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
+#include "Widgets/MB_EndScreenWidget.h"
 #include "Widgets/MB_HelmetWidget.h"
 #include "Widgets/MB_InteractionPromptWidget.h"
 #include "Widgets/MB_MainMenuWidget.h"
@@ -20,7 +21,8 @@ class MANUALBREATHING_API AMB_MainHUD : public AHUD
 public:
 	UMB_HelmetWidget* SetHelmetWidget(const bool bShowWidget);
 	UMB_MainMenuWidget* SetMainMenuWidget(const bool bShowWidget);
-	UMB_InteractionPromptWidget* SetInteractionPrompt(const bool bShowWidget);
+	UMB_InteractionPromptWidget* SetInteractionPromptWidget(const bool bShowWidget);
+	UMB_EndScreenWidget* SetEndScreenWidget(const bool bShowWidget);
 	
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta = (AllowPrivateAccess))
@@ -29,6 +31,8 @@ private:
 	TSubclassOf<UMB_MainMenuWidget> MainMenuWidgetClass;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta = (AllowPrivateAccess))
 	TSubclassOf<UMB_InteractionPromptWidget> InteractionPromptWidgetClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta = (AllowPrivateAccess))
+	TSubclassOf<UMB_EndScreenWidget> EndScreenWidgetClass;
 	
 	UPROPERTY()
 	TObjectPtr<UMB_HelmetWidget> HelmetWidget;
@@ -36,6 +40,8 @@ private:
 	TObjectPtr<UMB_MainMenuWidget> MainMenuWidget;
 	UPROPERTY()
 	TObjectPtr<UMB_InteractionPromptWidget> InteractionPromptWidget;
+	UPROPERTY()
+	TObjectPtr<UMB_EndScreenWidget> EndScreenWidget;
 
 	UUserWidget* SetWidgetActive(UUserWidget* WidgetInstance, TSubclassOf<UUserWidget> WidgetClass, const bool bShowWidget) const;
 };

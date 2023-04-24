@@ -41,6 +41,9 @@ public:
 	FORCEINLINE float GetOxygenAmountNormalized() const { return OxygenAmount / 100.f; }
 	FORCEINLINE float GetOxygenTankAmountNormalized() const { return OxygenTankAmount / DefaultOxygenTankAmount; }
 
+	FORCEINLINE float GetOxygenUsed() const { return DefaultOxygenTankAmount - OxygenTankAmount; }
+	FORCEINLINE int GetBreathsTaken() const { return BreathAmount; }
+
 	FORCEINLINE UMB_CameraComponent* GetCameraComponent() const { return CameraComponent; }
 	
 protected:
@@ -138,7 +141,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float LungAirAmount = 0.f;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
-	float BreathAmount;
+	int BreathAmount;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "02 Runtime Data", meta = (AllowPrivateAccess))
 	float OxygenTankAmount;
 	

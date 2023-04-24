@@ -35,7 +35,7 @@ UMB_MainMenuWidget* AMB_MainHUD::SetMainMenuWidget(const bool bShowWidget)
 	//return Cast<UMB_MainMenuWidget>(SetWidgetActive(HelmetWidget, HelmetWidgetClass, bShowWidget));
 }
 
-UMB_InteractionPromptWidget* AMB_MainHUD::SetInteractionPrompt(const bool bShowWidget)
+UMB_InteractionPromptWidget* AMB_MainHUD::SetInteractionPromptWidget(const bool bShowWidget)
 {
 	if (!IsValid(InteractionPromptWidget))
 	{
@@ -48,6 +48,20 @@ UMB_InteractionPromptWidget* AMB_MainHUD::SetInteractionPrompt(const bool bShowW
 
 	return InteractionPromptWidget;
 	//return Cast<UMB_InteractionPromptWidget>(SetWidgetActive(InteractionPromptWidget, InteractionPromptWidgetClass, bShowWidget));
+}
+
+UMB_EndScreenWidget* AMB_MainHUD::SetEndScreenWidget(const bool bShowWidget)
+{
+	if (!IsValid(EndScreenWidget))
+	{
+		APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+		EndScreenWidget = Cast<UMB_EndScreenWidget>(CreateWidget(PlayerController, EndScreenWidgetClass, FName("End Screen Widget")));
+	}
+
+	if (bShowWidget) EndScreenWidget->AddToViewport();
+	else EndScreenWidget->RemoveFromParent();
+
+	return EndScreenWidget;
 }
 
 //! TODO: fix this
