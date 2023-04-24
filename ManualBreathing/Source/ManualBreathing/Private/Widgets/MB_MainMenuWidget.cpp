@@ -3,6 +3,8 @@
 
 #include "Widgets/MB_MainMenuWidget.h"
 
+#include "Shell/Utils/LogUtils.h"
+
 void UMB_MainMenuWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
@@ -19,6 +21,11 @@ void UMB_MainMenuWidget::OnStartButton()
 void UMB_MainMenuWidget::OnCreditsButton()
 {
 	//! Get main hud and open credits widget
+	//! TODO: add a screen
+	FLogUtils::PrintScreen("SPECIAL THANKS TO ElementalCode#5020 @ UnrealSlackers!");
+	FLogUtils::PrintScreen("Vanessa Ong");
+	FLogUtils::PrintScreen("Jonathan Tang");
+	FLogUtils::PrintScreen("CREDITS (Because we didnt have time for a screen):");
 }
 
 void UMB_MainMenuWidget::OnQuitButton()
