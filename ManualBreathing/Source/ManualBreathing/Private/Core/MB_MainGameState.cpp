@@ -7,6 +7,7 @@
 #include "Shell/Utils/LogUtils.h"
 #include "World/MB_EarthActor.h"
 #include "World/MB_ExplosionFieldSystem.h"
+#include "World/MB_TitleWidgetActor.h"
 
 /* --- PROTECTED ---*/
 
@@ -43,6 +44,9 @@ void AMB_MainGameState::StartGameInternal()
 
 	UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(false);
 	MainHUD->SetHelmetWidget(true);
+
+	const AMB_TitleWidgetActor* TitleActor = Cast<AMB_TitleWidgetActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_TitleWidgetActor::StaticClass()));
+	TitleActor->SetWidgetHidden(true);
 
 	//! Blow up the earth!
 	AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));
