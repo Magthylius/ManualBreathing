@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "InputActionValue.h"
 #include "Components/MB_CameraComponent.h"
+#include "Components/MB_InteractionComponent.h"
+#include "Components/SphereComponent.h"
 #include "GameFramework/Character.h"
 #include "MB_AstronautCharacter.generated.h"
 
@@ -48,6 +50,7 @@ protected:
 	
 	void PerformMove(const FInputActionValue& Value);
 	void PerformLook(const FInputActionValue& Value);
+	void PerformInteraction(const FInputActionValue& Value);
 
 	void PerformInhale(const FInputActionValue& Value);
 	void PerformExhale(const FInputActionValue& Value);
@@ -57,6 +60,10 @@ private:
 	TObjectPtr<USkeletalMeshComponent> FirstPersonMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
 	TObjectPtr<UMB_CameraComponent> CameraComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<UMB_InteractionComponent> InteractionComponent;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "00 Components", meta = (AllowPrivateAccess))
+	TObjectPtr<USphereComponent> InteractionDetectorComponent;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta= (AllowPrivateAccess))
 	TObjectPtr<UInputMappingContext> DefaultMappingContext;
@@ -66,6 +73,8 @@ private:
 	TObjectPtr<UInputAction> MoveAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> LookAction;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
+	TObjectPtr<UInputAction> InteractAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))
 	TObjectPtr<UInputAction> InhaleAction;
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings | Input", meta = (AllowPrivateAccess))

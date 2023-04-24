@@ -2,11 +2,13 @@
 
 
 #include "Core/MB_MainGameState.h"
-
 #include "Core/MB_MainHUD.h"
 #include "Kismet/GameplayStatics.h"
+#include "Shell/Utils/LogUtils.h"
 #include "World/MB_EarthActor.h"
 #include "World/MB_ExplosionFieldSystem.h"
+
+/* --- PROTECTED ---*/
 
 void AMB_MainGameState::BeginPlay()
 {
@@ -15,41 +17,56 @@ void AMB_MainGameState::BeginPlay()
 	SetupHabitat();
 
 	APlayerController* PlayerController =  UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
+	PlayerController->SetInputMode(FInputModeUIOnly());
+	PlayerController->SetShowMouseCursor(true);
+	
+	const AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
 	AstronautCharacter->GetCameraComponent()->SetFieldOfView(60.f);
-
-	if (AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>(); IsValid(MainHUD))
-	{
-		PlayerController->SetInputMode(FInputModeUIOnly());
-		PlayerController->SetShowMouseCursor(true);
-		
-		UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(true);
-		MainMenuWidget->StartGameEvent.AddLambda([this, PlayerController, AstronautCharacter, MainHUD]()
-		{
-			PlayerController->SetInputMode(FInputModeGameOnly());
-			PlayerController->SetShowMouseCursor(false);
-			
-			AstronautCharacter->SetAllowBreathing(true);
-			AstronautCharacter->GetCameraComponent()->SetTargetFieldOfField(90.f);
-
-			MainHUD->SetMainMenuWidget(false);
-			MainHUD->SetHelmetWidget(true);
-
-			//! Blow up the earth!
-			AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));
-			if (IsValid(EarthActor))
-			{
-				EarthActor->SetHidden(true);
-			}
-
-			const AMB_ExplosionFieldSystem* ExplosionField = Cast<AMB_ExplosionFieldSystem>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_ExplosionFieldSystem::StaticClass()));
-			if (IsValid(ExplosionField))
-			{
-				ExplosionField->CreateExplosion();
-			}
-		});
-	}
+	
+	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
+	UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(true);
+	MainMenuWidget->StartGameEvent.AddUObject(this, &AMB_MainGameState::StartGameInternal);
 }
+
+void AMB_MainGameState::StartGameInternal()
+{
+	APlayerController* PlayerController =  UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(PlayerController->GetCharacter());
+	AMB_MainHUD* MainHUD = PlayerController->GetHUD<AMB_MainHUD>();
+	
+	PlayerController->SetInputMode(FInputModeGameOnly());
+	PlayerController->SetShowMouseCursor(false);
+			
+	AstronautCharacter->SetAllowBreathing(true);
+	AstronautCharacter->GetCameraComponent()->SetTargetFieldOfField(90.f);
+
+	UMB_MainMenuWidget* MainMenuWidget = MainHUD->SetMainMenuWidget(false);
+	MainHUD->SetHelmetWidget(true);
+
+	//! Blow up the earth!
+	AMB_EarthActor* EarthActor = Cast<AMB_EarthActor>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_EarthActor::StaticClass()));
+	if (IsValid(EarthActor))
+	{
+		EarthActor->SetHidden(true);
+	}
+
+	const AMB_ExplosionFieldSystem* ExplosionField = Cast<AMB_ExplosionFieldSystem>(UGameplayStatics::GetActorOfClass(GetWorld(), AMB_ExplosionFieldSystem::StaticClass()));
+	if (IsValid(ExplosionField))
+	{
+		ExplosionField->CreateExplosion();
+	}
+
+	MainMenuWidget->StartGameEvent.RemoveAll(this);
+}
+
+void AMB_MainGameState::EndGameInternal()
+{
+	FLogUtils::PrintScreen("Game has ended! You win!");
+	AMB_AstronautCharacter* AstronautCharacter = Cast<AMB_AstronautCharacter>(UGameplayStatics::GetPlayerCharacter(GetWorld(), 0));
+	AstronautCharacter->SetAllowBreathing(false);
+}
+
+/* --- PRIVATE ---*/
 
 void AMB_MainGameState::SetupHabitat()
 {

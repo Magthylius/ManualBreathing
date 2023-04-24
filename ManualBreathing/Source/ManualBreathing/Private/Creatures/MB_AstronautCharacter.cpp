@@ -38,6 +38,13 @@ AMB_AstronautCharacter::AMB_AstronautCharacter(const FObjectInitializer& ObjectI
 	FirstPersonMesh->SetOnlyOwnerSee(true);
 	FirstPersonMesh->bCastDynamicShadow = false;
 	FirstPersonMesh->CastShadow = false;
+
+	InteractionDetectorComponent = CreateDefaultSubobject<USphereComponent>("InteractionDetectorComponent");
+	InteractionDetectorComponent->SetupAttachment(RootComponent);
+	InteractionDetectorComponent->InitSphereRadius(100.f);
+	
+	InteractionComponent = CreateDefaultSubobject<UMB_InteractionComponent>("InteractionComponent");
+	InteractionComponent->SetupInteractionDetector(InteractionDetectorComponent);
 }
 
 /* --- PROTECTED ---*/
@@ -152,6 +159,7 @@ void AMB_AstronautCharacter::SetupPlayerInputComponent(UInputComponent* PlayerIn
 
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformMove);
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformLook);
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AMB_AstronautCharacter::PerformInteraction);
 		
 		EnhancedInputComponent->BindAction(InhaleAction, ETriggerEvent::Triggered, this, &AMB_AstronautCharacter::PerformInhale);
 		EnhancedInputComponent->BindAction(InhaleAction, ETriggerEvent::Completed, this, &AMB_AstronautCharacter::PerformInhale);
@@ -189,6 +197,11 @@ void AMB_AstronautCharacter::PerformLook(const FInputActionValue& Value)
 	}
 }
 
+void AMB_AstronautCharacter::PerformInteraction(const FInputActionValue& Value)
+{
+	InteractionComponent->Interact();
+}
+
 void AMB_AstronautCharacter::PerformInhale(const FInputActionValue& Value)
 {
 	if (const bool bIsPressed = Value.Get<bool>(); bIsInhaling != bIsPressed)
@@ -207,7 +220,6 @@ void AMB_AstronautCharacter::PerformExhale(const FInputActionValue& Value)
 		if (bExpectingExhale)
 		{
 			bExpectingExhale = false;
-
 			BreathAmount++;
 		}
 	}
