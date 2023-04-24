@@ -3,6 +3,7 @@
 
 #include "World/MB_HabitatTerminalActor.h"
 
+#include "Core/MB_MainGameState.h"
 #include "Shell/Utils/LogUtils.h"
 
 AMB_HabitatTerminalActor::AMB_HabitatTerminalActor()
@@ -12,7 +13,8 @@ AMB_HabitatTerminalActor::AMB_HabitatTerminalActor()
 
 void AMB_HabitatTerminalActor::BeginInteraction()
 {
-	FLogUtils::PrintScreen("Interacted with AMB_HabitatTerminalActor "+ GetName());
+	AMB_MainGameState* GameState = GetWorld()->GetGameState<AMB_MainGameState>();
+	GameState->EndGame();
 }
 
 void AMB_HabitatTerminalActor::OnEnterInteractionRange(UMB_InteractionComponent* InteractionComponent)

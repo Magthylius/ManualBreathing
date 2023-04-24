@@ -60,7 +60,6 @@ void UMB_InteractionComponent::Interact()
 				break;
 			}
 		}
-
 	}
 }
 

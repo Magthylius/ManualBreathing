@@ -18,8 +18,15 @@ class MANUALBREATHING_API AMB_MainGameState : public AGameStateBase
 public:
 	FORCEINLINE AMB_HabitatActor* GetTrueHabitat() const { return TrueHabitat; }
 	
+	void EndGame() { EndGameInternal(); }
+	
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	void StartGameInternal();
+	UFUNCTION(BlueprintCallable)
+	void EndGameInternal();
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "01 Settings", meta = (AllowPrivateAccess))
